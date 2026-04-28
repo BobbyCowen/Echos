@@ -1,6 +1,10 @@
 export const schema = {
-  entries: 'entries',
-  media: 'media',
-  tags: 'tags',
-  entryTags: 'entry_tags',
+  databaseName: 'echos.db',
+  tables: {
+    appMeta: 'app_meta',
+    entries: 'entries',
+    media: 'media',
+    tags: 'tags',
+    entryTags: 'entry_tags',
+  },
 } as const;
