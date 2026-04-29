@@ -1,6 +1,7 @@
 import { getDb } from './client';
 
 export const runMigrations = async () => {
+  console.log('[db] starting migrations');
   const db = await getDb();
 
   await db.execAsync(`
@@ -58,4 +59,6 @@ export const runMigrations = async () => {
     CREATE INDEX IF NOT EXISTS idx_entry_tags_entry_id ON entry_tags(entry_id);
     CREATE INDEX IF NOT EXISTS idx_entry_tags_tag_id ON entry_tags(tag_id);
   `);
+
+  console.log('[db] migrations complete');
 };
