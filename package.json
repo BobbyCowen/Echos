@@ -9,6 +9,9 @@
     "front:start": "npm run start --workspace front",
     "front:android": "npm run android --workspace front",
     "front:ios": "npm run ios --workspace front",
-    "front:web": "npm run web --workspace front"
+    "front:web": "npm run web --workspace front",
+    "api:dev": "npm run dev --workspace api",
+    "api:build": "npm run build --workspace api",
+    "api:start": "npm run start --workspace api"
   }
 }
