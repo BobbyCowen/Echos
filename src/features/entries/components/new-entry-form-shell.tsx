@@ -32,10 +32,25 @@ const NewEntryFormShell = () => {
         </View>
       </FieldShell>
 
-      <FieldShell label="Media" hint="Photos and links will be attached here.">
-        <View style={styles.placeholderBox}>
-          <Text style={styles.placeholderTitle}>Media placeholder</Text>
-          <Text style={styles.placeholderText}>Photo picker and link attachment will be plugged in later.</Text>
+      <FieldShell label="Media" hint="An entry can contain multiple photos and links, not just a single attachment.">
+        <View style={styles.mediaSection}>
+          <View style={styles.placeholderBox}>
+            <Text style={styles.placeholderTitle}>Media list placeholder</Text>
+            <Text style={styles.placeholderText}>Attached media items will appear here as a list.</Text>
+          </View>
+
+          <View style={styles.actionsRow}>
+            <View style={styles.actionChip}>
+              <Text style={styles.actionChipText}>+ Add photo</Text>
+            </View>
+            <View style={styles.actionChip}>
+              <Text style={styles.actionChipText}>+ Add link</Text>
+            </View>
+          </View>
+
+          <Text style={styles.helperText}>
+            The final implementation will support multiple media items per entry.
+          </Text>
         </View>
       </FieldShell>
     </View>
@@ -59,6 +74,9 @@ const styles = StyleSheet.create({
   textarea: {
     minHeight: 160,
   },
+  mediaSection: {
+    gap: 12,
+  },
   placeholderBox: {
     borderWidth: 1,
     borderStyle: 'dashed',
@@ -77,6 +95,26 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
     color: '#475569',
+  },
+  actionsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+  },
+  actionChip: {
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 999,
+    backgroundColor: '#e2e8f0',
+  },
+  actionChipText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#0f172a',
+  },
+  helperText: {
+    fontSize: 13,
+    color: '#64748b',
   },
 });
 
