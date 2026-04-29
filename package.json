@@ -12,6 +12,12 @@
     "front:web": "npm run web --workspace front",
     "api:dev": "npm run dev --workspace api",
     "api:build": "npm run build --workspace api",
-    "api:start": "npm run start --workspace api"
+    "api:start": "npm run start --workspace api",
+    "db:up": "docker compose up -d postgres",
+    "db:down": "docker compose down",
+    "db:logs": "docker compose logs -f postgres",
+    "api:prisma:generate": "npm run prisma:generate --workspace api",
+    "api:prisma:migrate:dev": "npm run prisma:migrate:dev --workspace api",
+    "api:prisma:migrate:deploy": "npm run prisma:migrate:deploy --workspace api"
   }
 }
