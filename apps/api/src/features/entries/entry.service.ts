@@ -1,0 +1,28 @@
+import { prisma } from '../../lib/prisma.js';
+
+import type { CreateEntryInput } from './entry.schema.js';
+import { toEntryRecord } from './entry.mapper.js';
+
+export const createEntry = async (input: CreateEntryInput) => {
+  const entry = await prisma.entry.create({
+    data: {
+      title: input.title,
+      content: input.content,
+      timePrecision: input.timePrecision,
+      startDate: input.startDate,
+      endDate: input.endDate,
+      displayDateLabel: input.displayDateLabel,
+      sortDate: input.sortDate,
+    },
+  });
+
+  return toEntryRecord(entry);
+};
+
+export const listEntries = async () => {
+  const entries = await prisma.entry.findMany({
+    orderBy: [{ sortDate: 'desc' }, { createdAt: 'desc' }],
+  });
+
+  return entries.map(toEntryRecord);
+};
