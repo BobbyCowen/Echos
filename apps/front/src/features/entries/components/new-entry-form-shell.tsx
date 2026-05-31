@@ -1,20 +1,70 @@
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { useState } from 'react';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import FieldShell from '@/src/components/ui/field-shell';
+import { createEntry } from '@/src/features/entries/services/entry-api';
 
 const NewEntryFormShell = () => {
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const trimmedContent = content.trim();
+  const canSubmit = trimmedContent.length > 0 && !isSubmitting;
+
+  const handleSubmit = async () => {
+    if (!canSubmit) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSuccessMessage(null);
+    setErrorMessage(null);
+
+    try {
+      const now = new Date().toISOString();
+
+      await createEntry({
+        title: title.trim() || null,
+        content: trimmedContent,
+        timePrecision: 'exact',
+        startDate: null,
+        endDate: null,
+        displayDateLabel: null,
+        sortDate: now,
+      });
+
+      setTitle('');
+      setContent('');
+      setSuccessMessage('Entry saved through the API.');
+    } catch {
+      setErrorMessage('The entry could not be saved. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <FieldShell label="Title" hint="Optional. Give this memory a quick name.">
-        <TextInput placeholder="A quiet Sunday afternoon" style={styles.input} />
+        <TextInput
+          onChangeText={setTitle}
+          placeholder="A quiet Sunday afternoon"
+          style={styles.input}
+          value={title}
+        />
       </FieldShell>
 
       <FieldShell label="Memory" hint="Write what happened, what mattered, or what you want to remember.">
         <TextInput
           multiline
+          onChangeText={setContent}
           placeholder="Write your memory here..."
           style={[styles.input, styles.textarea]}
           textAlignVertical="top"
+          value={content}
         />
       </FieldShell>
 
@@ -53,6 +103,18 @@ const NewEntryFormShell = () => {
           </Text>
         </View>
       </FieldShell>
+
+      {successMessage ? <Text style={styles.successText}>{successMessage}</Text> : null}
+      {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
+
+      <Pressable
+        accessibilityRole="button"
+        disabled={!canSubmit}
+        onPress={handleSubmit}
+        style={[styles.submitButton, !canSubmit && styles.submitButtonDisabled]}
+      >
+        <Text style={styles.submitButtonText}>{isSubmitting ? 'Saving...' : 'Save entry'}</Text>
+      </Pressable>
     </View>
   );
 };
@@ -115,6 +177,31 @@ const styles = StyleSheet.create({
   helperText: {
     fontSize: 13,
     color: '#64748b',
+  },
+  successText: {
+    color: '#15803d',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  errorText: {
+    color: '#b91c1c',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  submitButton: {
+    alignItems: 'center',
+    borderRadius: 999,
+    backgroundColor: '#2563eb',
+    paddingHorizontal: 18,
+    paddingVertical: 14,
+  },
+  submitButtonDisabled: {
+    backgroundColor: '#94a3b8',
+  },
+  submitButtonText: {
+    color: '#ffffff',
+    fontSize: 15,
+    fontWeight: '700',
   },
 });
 
