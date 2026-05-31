@@ -2,7 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import type { ZodIssue } from 'zod';
 
 import { createEntrySchema } from './entry.schema.js';
-import { createEntry } from './entry.service.js';
+import { createEntry, listEntries } from './entry.service.js';
 
 const formatValidationIssues = (issues: ZodIssue[]) =>
   issues.map((issue) => ({
@@ -11,6 +11,12 @@ const formatValidationIssues = (issues: ZodIssue[]) =>
   }));
 
 export const registerEntriesRoutes = async (app: FastifyInstance) => {
+  app.get('/entries', async () => {
+    const entries = await listEntries();
+
+    return { entries };
+  });
+
   app.post('/entries', async (request, reply) => {
     const parsedBody = createEntrySchema.safeParse(request.body);
 
