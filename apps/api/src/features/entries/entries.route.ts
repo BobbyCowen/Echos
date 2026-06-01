@@ -2,7 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import type { ZodIssue } from 'zod';
 
 import { createEntrySchema } from './entry.schema.js';
-import { createEntry, listEntries } from './entry.service.js';
+import { createEntry, getEntryById, listEntries } from './entry.service.js';
 
 const formatValidationIssues = (issues: ZodIssue[]) =>
   issues.map((issue) => ({
@@ -15,6 +15,19 @@ export const registerEntriesRoutes = async (app: FastifyInstance) => {
     const entries = await listEntries();
 
     return { entries };
+  });
+
+  app.get<{ Params: { id: string } }>('/entries/:id', async (request, reply) => {
+    const entry = await getEntryById(request.params.id);
+
+    if (!entry) {
+      return reply.status(404).send({
+        error: 'ENTRY_NOT_FOUND',
+        message: 'Entry not found',
+      });
+    }
+
+    return { entry };
   });
 
   app.post('/entries', async (request, reply) => {

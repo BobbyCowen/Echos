@@ -26,3 +26,11 @@ export const listEntries = async () => {
 
   return entries.map(toEntryRecord);
 };
+
+export const getEntryById = async (id: string) => {
+  const entry = await prisma.entry.findUnique({
+    where: { id },
+  });
+
+  return entry ? toEntryRecord(entry) : null;
+};
