@@ -16,6 +16,22 @@ type CreateEntryResponse = {
   entry: Entry;
 };
 
+type ListEntriesResponse = {
+  entries: Entry[];
+};
+
+export const listEntries = async (): Promise<Entry[]> => {
+  const response = await fetch(`${API_BASE_URL}/entries`);
+
+  if (!response.ok) {
+    throw new Error('Unable to load entries');
+  }
+
+  const data = (await response.json()) as ListEntriesResponse;
+
+  return data.entries;
+};
+
 export const createEntry = async (payload: CreateEntryPayload): Promise<Entry> => {
   const response = await fetch(`${API_BASE_URL}/entries`, {
     method: 'POST',
