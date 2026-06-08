@@ -16,6 +16,10 @@ type CreateEntryResponse = {
   entry: Entry;
 };
 
+type GetEntryResponse = {
+  entry: Entry;
+};
+
 type ListEntriesResponse = {
   entries: Entry[];
 };
@@ -30,6 +34,22 @@ export const listEntries = async (): Promise<Entry[]> => {
   const data = (await response.json()) as ListEntriesResponse;
 
   return data.entries;
+};
+
+export const getEntry = async (id: string): Promise<Entry> => {
+  const response = await fetch(`${API_BASE_URL}/entries/${id}`);
+
+  if (response.status === 404) {
+    throw new Error('Entry not found');
+  }
+
+  if (!response.ok) {
+    throw new Error('Unable to load entry');
+  }
+
+  const data = (await response.json()) as GetEntryResponse;
+
+  return data.entry;
 };
 
 export const createEntry = async (payload: CreateEntryPayload): Promise<Entry> => {

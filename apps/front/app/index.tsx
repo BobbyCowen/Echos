@@ -75,11 +75,6 @@ const HomeScreen = () => {
                   pathname: '/entry/[id]',
                   params: {
                     id: entry.id,
-                    title: entry.title ?? '',
-                    content: entry.content,
-                    timePrecision: entry.timePrecision,
-                    sortDate: entry.sortDate,
-                    displayDateLabel: entry.displayDateLabel ?? '',
                   },
                 }}
                 key={entry.id}
