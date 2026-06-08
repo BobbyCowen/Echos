@@ -69,11 +69,28 @@ const HomeScreen = () => {
         {!isLoading && !errorMessage && entries.length > 0 ? (
           <View style={styles.timelineList}>
             {entries.map((entry) => (
-              <View key={entry.id} style={styles.entryCard}>
-                <Text style={styles.entryDate}>{formatEntryDate(entry)}</Text>
-                {entry.title ? <Text style={styles.entryTitle}>{entry.title}</Text> : null}
-                <Text style={styles.entryContent}>{entry.content}</Text>
-              </View>
+              <Link
+                asChild
+                href={{
+                  pathname: '/entry/[id]',
+                  params: {
+                    id: entry.id,
+                    title: entry.title ?? '',
+                    content: entry.content,
+                    timePrecision: entry.timePrecision,
+                    sortDate: entry.sortDate,
+                    displayDateLabel: entry.displayDateLabel ?? '',
+                  },
+                }}
+                key={entry.id}
+              >
+                <Pressable style={styles.entryCard}>
+                  <Text style={styles.entryDate}>{formatEntryDate(entry)}</Text>
+                  {entry.title ? <Text style={styles.entryTitle}>{entry.title}</Text> : null}
+                  <Text style={styles.entryContent}>{entry.content}</Text>
+                  <Text style={styles.entryAction}>Open memory</Text>
+                </Pressable>
+              </Link>
             ))}
           </View>
         ) : null}
@@ -172,6 +189,11 @@ const styles = StyleSheet.create({
     color: '#334155',
     fontSize: 15,
     lineHeight: 22,
+  },
+  entryAction: {
+    color: '#2563eb',
+    fontSize: 13,
+    fontWeight: '700',
   },
   footerAction: {
     marginTop: 'auto',
