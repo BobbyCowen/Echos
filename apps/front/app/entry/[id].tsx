@@ -108,9 +108,14 @@ const EntryDetailScreen = () => {
               </View>
             </View>
 
-            <Link href="/" style={styles.backLink}>
-              Back to timeline
-            </Link>
+            <View style={styles.detailActions}>
+              <Link href={`/entry/${entry.id}/edit`} style={styles.editLink}>
+                Edit memory
+              </Link>
+              <Link href="/" style={styles.backLink}>
+                Back to timeline
+              </Link>
+            </View>
           </>
         ) : null}
       </ScrollView>
@@ -226,6 +231,21 @@ const styles = StyleSheet.create({
     color: '#0f172a',
     fontSize: 15,
     fontWeight: '600',
+  },
+  detailActions: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 16,
+  },
+  editLink: {
+    backgroundColor: '#2563eb',
+    borderRadius: 999,
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '700',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
   },
   backLink: {
     color: '#2563eb',

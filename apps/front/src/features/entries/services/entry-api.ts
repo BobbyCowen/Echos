@@ -12,13 +12,19 @@ type CreateEntryPayload = {
   sortDate: string;
 };
 
-type CreateEntryResponse = {
+type UpdateEntryPayload = Partial<
+  Pick<Entry, 'title' | 'content' | 'timePrecision' | 'startDate' | 'endDate' | 'displayDateLabel' | 'sortDate'>
+>;
+
+type EntryResponse = {
   entry: Entry;
 };
 
-type GetEntryResponse = {
-  entry: Entry;
-};
+type GetEntryResponse = EntryResponse;
+
+type CreateEntryResponse = EntryResponse;
+
+type UpdateEntryResponse = EntryResponse;
 
 type ListEntriesResponse = {
   entries: Entry[];
@@ -66,6 +72,28 @@ export const createEntry = async (payload: CreateEntryPayload): Promise<Entry> =
   }
 
   const data = (await response.json()) as CreateEntryResponse;
+
+  return data.entry;
+};
+
+export const updateEntry = async (id: string, payload: UpdateEntryPayload): Promise<Entry> => {
+  const response = await fetch(`${API_BASE_URL}/entries/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (response.status === 404) {
+    throw new Error('Entry not found');
+  }
+
+  if (!response.ok) {
+    throw new Error('Unable to update entry');
+  }
+
+  const data = (await response.json()) as UpdateEntryResponse;
 
   return data.entry;
 };
