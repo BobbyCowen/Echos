@@ -18,9 +18,14 @@ const optionalNullableDate = z.coerce
   .optional()
   .transform((value) => value ?? null);
 
+const entryTitleSchema = z.string().trim().min(1).max(200).nullable();
+const entryContentSchema = z.string().trim().min(1);
+const entryDisplayDateLabelSchema = z.string().trim().min(1).max(200).nullable();
+const entryDateSchema = z.coerce.date().nullable();
+
 export const createEntrySchema = z.object({
   title: optionalNullableString(200),
-  content: z.string().trim().min(1),
+  content: entryContentSchema,
   timePrecision: entryTimePrecisionSchema,
   startDate: optionalNullableDate,
   endDate: optionalNullableDate,
@@ -28,4 +33,20 @@ export const createEntrySchema = z.object({
   sortDate: z.coerce.date(),
 });
 
+export const updateEntrySchema = z
+  .object({
+    title: entryTitleSchema.optional(),
+    content: entryContentSchema.optional(),
+    timePrecision: entryTimePrecisionSchema.optional(),
+    startDate: entryDateSchema.optional(),
+    endDate: entryDateSchema.optional(),
+    displayDateLabel: entryDisplayDateLabelSchema.optional(),
+    sortDate: z.coerce.date().optional(),
+  })
+  .strict()
+  .refine((input) => Object.keys(input).length > 0, {
+    message: 'At least one editable field must be provided',
+  });
+
 export type CreateEntryInput = z.infer<typeof createEntrySchema>;
+export type UpdateEntryInput = z.infer<typeof updateEntrySchema>;

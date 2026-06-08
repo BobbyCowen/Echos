@@ -1,6 +1,6 @@
 import { prisma } from '../../lib/prisma.js';
 
-import type { CreateEntryInput } from './entry.schema.js';
+import type { CreateEntryInput, UpdateEntryInput } from './entry.schema.js';
 import { toEntryRecord } from './entry.mapper.js';
 
 export const createEntry = async (input: CreateEntryInput) => {
@@ -33,4 +33,22 @@ export const getEntryById = async (id: string) => {
   });
 
   return entry ? toEntryRecord(entry) : null;
+};
+
+export const updateEntry = async (id: string, input: UpdateEntryInput) => {
+  const existingEntry = await prisma.entry.findUnique({
+    where: { id },
+    select: { id: true },
+  });
+
+  if (!existingEntry) {
+    return null;
+  }
+
+  const entry = await prisma.entry.update({
+    where: { id },
+    data: input,
+  });
+
+  return toEntryRecord(entry);
 };
